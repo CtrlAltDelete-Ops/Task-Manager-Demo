@@ -1,47 +1,49 @@
-const { MongoClient, ObjectId } = require('mongodb');
+const { MongoClient, ObjectId } = require("mongodb");
 
 const connectionURL = "mongodb://127.0.0.1:27017";
 const databaseName = "testdb";
 
 console.log("attempting to connect");
 
-const Id = new ObjectId();
-console.log(Id);
-
 const client = new MongoClient(connectionURL);
+j;
 
 const main = async () => {
-    try{
-        await client.connect();
-        console.log("connected successfully to Mongodb!");
-        const db = client.db(databaseName);
-        const result = await db.collection('users').insertOne({
-            Name: "Ismail Amin",
-            Age: 18.2
-        });
-        console.log('inserted id: ', result.insertedId);
-    } catch (error) {
-        console.error("Error: ", error)
-    } finally {
-        await client.close();
-        console.log("connection closed successfully");
-    }
-}
+  try {
+    await client.connect();
+    console.log("connected successfully to Mongodb!");
+    const db = client.db(databaseName);
+    const user = await db
+      .collection("users")
+      .findOne({ _id: new ObjectId("680337cdecde8709c6a073ff") });
+    console.log(user);
+    const incompleteTasks = await db
+      .collection("Tasks")
+      .find({ completed: false })
+      .toArray();
+    const count = await db
+      .collection("Tasks")
+      .countDocuments({ completed: false });
+    console.log(count);
+    const lastTask = await db
+      .collection("Tasks")
+      .findOne({ _id: new ObjectId("68032e3eedc11a76e0d084ba") });
+    console.log(lastTask);
+
+    const deletedDocument = await db.collection("users").deleteOne({
+      _id: new ObjectId("680337cdecde8709c6a073ff"),
+    });
+
+    console.log(deletedDocument);
+  } catch (error) {
+    console.log("Error occured: ", error);
+  } finally {
+    await client.close();
+    console.log("connection closed successfully");
+  }
+};
+
 main();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // const connectingToMongodb = async () => {
 //     try {
