@@ -32,3 +32,7 @@ test('async/await demo', async() => {
     const sum = await add(4, 5);
     expect(sum).toBe(9);
 })
+
+test('', () => {
+    
+})
