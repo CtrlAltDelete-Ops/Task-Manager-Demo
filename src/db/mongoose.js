@@ -3,7 +3,7 @@ const validator = require("validator");
 
 const main = async () => {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/task-manager-api");
+    await mongoose.connect(process.env.MONGOOSE_URL);
     console.log("Connecion successfull!");
   } catch (error) {
     console.error("Error: ", error);
@@ -11,4 +11,3 @@ const main = async () => {
 };
 
 main();
-

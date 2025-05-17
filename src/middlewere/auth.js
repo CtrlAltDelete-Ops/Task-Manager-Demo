@@ -3,8 +3,11 @@ const User = require('../models/user');
 
 const auth = async (req, res, next) => {
     try {
-        const token = req.header('authorization').replace('Bearer ', '');
-        const decoded = jwt.verify(token, 'helloworldnow');
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        if (!token) {
+            throw new Error('no token provided');
+        }
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
         console.log(decoded);
     const user = await User.findOne({ _id: decoded._id, 'tokens.token': token});
         if(!user) {
@@ -15,7 +18,7 @@ const auth = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        console.log('Error occured');
+        console.log(error.message);
         res.status(401).send('authentication error');
     }
 }
